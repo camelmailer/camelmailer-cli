@@ -1,10 +1,10 @@
-# CamelMailer CLI
+# Camelmailer CLI
 
 [![CI](https://github.com/camelmailer/camelmailer-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/camelmailer/camelmailer-cli/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/camelmailer-cli.svg)](https://www.npmjs.com/package/camelmailer-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-[CamelMailer](https://camelmailer.com) from your terminal — send and inspect transactional email. Works with the CamelMailer cloud and any self-hosted instance.
+[Camelmailer](https://camelmailer.com) from your terminal — send and inspect transactional email. Works with the Camelmailer cloud and any self-hosted instance.
 
 ## Install
 
@@ -89,7 +89,7 @@ camelmailer --json emails list --status HardFail | jq '.messages[].rcpt_to'
 
 ## Errors & exit codes
 
-Failures print `Error [Code]: message` to stderr and exit non-zero. Codes are the stable CamelMailer API codes (`Unauthorized`, `NotFound`, `ValidationError`, …) plus CLI-local ones (`MissingApiKey`, `MissingBody`, `InvalidJson`).
+Failures print `Error [Code]: message` to stderr and exit non-zero. Codes are the stable Camelmailer API codes (`Unauthorized`, `NotFound`, `ValidationError`, …) plus CLI-local ones (`MissingApiKey`, `MissingBody`, `InvalidJson`).
 
 ```bash
 camelmailer emails get 999999 || echo "exit $?"
