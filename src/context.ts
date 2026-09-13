@@ -1,6 +1,6 @@
 import type { Command } from 'commander';
 
-import type { CamelMailerResult } from 'camelmailer';
+import type { CamelMailerResult } from '@camelmailer/sdk';
 
 import type { CliClient, ClientOverrides } from './client.js';
 import { CliError } from './errors.js';

@@ -1,4 +1,4 @@
-import type { Pagination } from 'camelmailer';
+import type { Pagination } from '@camelmailer/sdk';
 
 /** Render a value for table/key-value output. */
 export function toCell(value: unknown): string {

@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const constructorSpy = vi.fn();
 
-vi.mock('camelmailer', () => ({
+vi.mock('@camelmailer/sdk', () => ({
   CamelMailer: class {
     constructor(key?: string, options?: { baseUrl?: string; userAgent?: string }) {
       constructorSpy(key, options);

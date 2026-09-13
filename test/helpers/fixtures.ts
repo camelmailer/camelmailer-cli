@@ -1,4 +1,4 @@
-import type { Email, Pagination } from 'camelmailer';
+import type { Email, Pagination } from '@camelmailer/sdk';
 
 export function pagination(overrides: Partial<Pagination> = {}): Pagination {
   return { page: 1, per_page: 30, total: 1, total_pages: 1, ...overrides };

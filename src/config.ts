@@ -12,7 +12,7 @@ export interface CliConfig {
 export function configDir(): string {
   const xdg = process.env.XDG_CONFIG_HOME;
   const base = xdg && xdg !== '' ? xdg : join(homedir(), '.config');
-  return join(base, 'camelmailer');
+  return join(base, '@camelmailer/sdk');
 }
 
 export function configPath(): string {

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import type { Template } from 'camelmailer';
+import type { Template } from '@camelmailer/sdk';
 
 import { apiError, ok, runCli } from './helpers/run.js';
 

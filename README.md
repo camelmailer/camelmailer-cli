@@ -1,7 +1,7 @@
 # Camelmailer CLI
 
 [![CI](https://github.com/camelmailer/camelmailer-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/camelmailer/camelmailer-cli/actions/workflows/ci.yml)
-[![npm](https://img.shields.io/npm/v/camelmailer-cli.svg)](https://www.npmjs.com/package/camelmailer-cli)
+[![npm](https://img.shields.io/npm/v/%40camelmailer%2Fcli.svg)](https://www.npmjs.com/package/@camelmailer/cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 [Camelmailer](https://camelmailer.com) from your terminal — send and inspect transactional email. Works with the Camelmailer cloud and any self-hosted instance.
@@ -9,12 +9,8 @@
 ## Install
 
 ```bash
-npm install -g camelmailer-cli
+npm install -g @camelmailer/cli
 ```
-
-> Until the packages land on npm, install straight from GitHub:
-> `npm install -g github:camelmailer/camelmailer-cli` (this also builds the
-> `camelmailer` SDK dependency from source once).
 
 ## Quickstart
 
