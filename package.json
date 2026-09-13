@@ -1,5 +1,5 @@
 {
-  "name": "camelmailer-cli",
+  "name": "@camelmailer/cli",
   "version": "0.1.0",
   "description": "Command-line interface for Camelmailer — send and inspect transactional email from your terminal",
   "keywords": [
@@ -38,7 +38,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "camelmailer": "github:camelmailer/camelmailer-node",
+    "@camelmailer/sdk": "^0.1.0",
     "commander": "^14.0.0"
   },
   "devDependencies": {
@@ -51,5 +51,8 @@
   },
   "engines": {
     "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

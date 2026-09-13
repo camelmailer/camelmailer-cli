@@ -25,7 +25,7 @@ export function buildProgram(deps: Partial<CliDeps> = {}): Command {
 
   const program = new Command();
   program
-    .name('camelmailer')
+    .name('@camelmailer/sdk')
     .description('CamelMailer from your terminal — send and inspect transactional email')
     .version(VERSION)
     .option('--json', 'print raw JSON instead of tables')

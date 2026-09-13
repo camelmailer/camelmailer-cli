@@ -20,7 +20,7 @@ afterEach(() => {
 
 describe('config file', () => {
   it('lives under $XDG_CONFIG_HOME/camelmailer/config.json', () => {
-    expect(configPath()).toBe(join(dir, 'camelmailer', 'config.json'));
+    expect(configPath()).toBe(join(dir, '@camelmailer/sdk', 'config.json'));
   });
 
   it('round-trips and is created with mode 600', () => {

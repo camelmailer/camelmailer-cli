@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import type { DmarcSummary } from 'camelmailer';
+import type { DmarcSummary } from '@camelmailer/sdk';
 
 import { apiError, ok, runCli } from './helpers/run.js';
 

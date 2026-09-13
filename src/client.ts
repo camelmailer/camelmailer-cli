@@ -1,4 +1,4 @@
-import { CamelMailer } from 'camelmailer';
+import { CamelMailer } from '@camelmailer/sdk';
 import type {
   CamelMailerResult,
   DmarcFilterOptions,
@@ -18,7 +18,7 @@ import type {
   SendEmailResponse,
   SendEmailWithTemplateOptions,
   TemplateResponse,
-} from 'camelmailer';
+} from '@camelmailer/sdk';
 
 import { readConfig } from './config.js';
 import { CliError } from './errors.js';

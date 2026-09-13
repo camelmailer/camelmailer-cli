@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import type { SendEmailResponse } from 'camelmailer';
+import type { SendEmailResponse } from '@camelmailer/sdk';
 
 import { email, pagination } from './helpers/fixtures.js';
 import { apiError, ok, runCli } from './helpers/run.js';

@@ -1,6 +1,6 @@
 import type { Command } from 'commander';
 
-import type { ListBouncesOptions } from 'camelmailer';
+import type { ListBouncesOptions } from '@camelmailer/sdk';
 
 import type { CliDeps, Context } from '../context.js';
 import { action } from '../context.js';
