@@ -1,7 +1,7 @@
 {
   "name": "camelmailer-cli",
   "version": "0.1.0",
-  "description": "Command-line interface for CamelMailer — send and inspect transactional email from your terminal",
+  "description": "Command-line interface for Camelmailer — send and inspect transactional email from your terminal",
   "keywords": [
     "camelmailer",
     "email",
@@ -19,7 +19,7 @@
     "url": "git+https://github.com/camelmailer/camelmailer-cli.git"
   },
   "license": "MIT",
-  "author": "CamelMailer contributors",
+  "author": "Camelmailer contributors",
   "type": "module",
   "bin": {
     "camelmailer": "./dist/cli.js"

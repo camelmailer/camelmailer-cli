@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `camelmailer` binary built on the CamelMailer Node.js SDK.
+- `camelmailer` binary built on the Camelmailer Node.js SDK.
 - `login` / `logout`: store credentials in `~/.config/camelmailer/config.json`
   (created with mode 600), with `CAMELMAILER_API_KEY` / `CAMELMAILER_BASE_URL`
   environment variables and `--api-key` / `--base-url` flags taking precedence.
