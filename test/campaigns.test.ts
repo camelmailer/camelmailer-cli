@@ -122,14 +122,19 @@ describe('campaigns update', () => {
   });
 
   it('leaves the schedule alone when neither flag is given', async () => {
-    const update = vi.fn(() => ok({ campaign: campaign() }));
+    let body: Record<string, unknown> | undefined;
+    const update = vi.fn((_id: number, options: Record<string, unknown>) => {
+      body = options;
+      return ok({ campaign: campaign() });
+    });
     await runCli(['campaigns', 'update', '7', '--subject', 'Corrected'], {
       campaigns: { update } as never,
     });
 
-    expect(update).toHaveBeenCalledWith(7, expect.not.objectContaining({ scheduled_at: null }));
-    const [, body] = update.mock.calls[0] as [number, Record<string, unknown>];
-    expect('scheduled_at' in body).toBe(false);
+    // The key has to be absent, not merely null: sending it as null would
+    // clear the schedule.
+    expect(body).toBeDefined();
+    expect('scheduled_at' in (body ?? {})).toBe(false);
   });
 
   it('reports the API refusing to edit a sending campaign', async () => {
