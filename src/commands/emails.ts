@@ -21,6 +21,7 @@ interface SendFlags {
   model?: string;
   tag?: string;
   stream?: string;
+  idempotencyKey?: string;
 }
 
 async function sendEmail(ctx: Context, flags: SendFlags): Promise<void> {
@@ -51,15 +52,17 @@ async function sendEmail(ctx: Context, flags: SendFlags): Promise<void> {
   };
 
   const client = ctx.client();
+  // The key travels as a header, so it never becomes part of the body the
+  // server hashes to recognise a replay.
+  const request = flags.idempotencyKey ? { idempotencyKey: flags.idempotencyKey } : undefined;
   const data = flags.template
     ? await ctx.unwrap(
-        client.emails.sendWithTemplate({
-          ...base,
-          template: flags.template,
-          template_model: templateModel,
-        }),
+        client.emails.sendWithTemplate(
+          { ...base, template: flags.template, template_model: templateModel },
+          request,
+        ),
       )
-    : await ctx.unwrap(client.emails.send(base));
+    : await ctx.unwrap(client.emails.send(base, request));
 
   ctx.print(data, () => {
     const count = data.recipients.length;
@@ -70,6 +73,50 @@ async function sendEmail(ctx: Context, flags: SendFlags): Promise<void> {
         data.recipients.map((r) => [r.message_id, r.rcpt_to, r.status, r.token]),
       ),
     );
+  });
+}
+
+interface BroadcastFlags {
+  from: string;
+  subject?: string;
+  html?: string;
+  text?: string;
+  template?: string;
+  model?: string;
+}
+
+async function sendToStream(
+  ctx: Context,
+  permalink: string,
+  flags: BroadcastFlags,
+): Promise<void> {
+  if (flags.model !== undefined && flags.template === undefined) {
+    throw new CliError('InvalidOption', '--model requires --template.');
+  }
+  if (flags.template === undefined && flags.html === undefined && flags.text === undefined) {
+    throw new CliError(
+      'MissingBody',
+      'Provide a body: --html, --text, or --template <permalink>.',
+    );
+  }
+  const templateModel = flags.model ? parseJsonObject(flags.model, '--model') : undefined;
+
+  const data = await ctx.unwrap(
+    ctx.client().emails.sendToStream(permalink, {
+      from: flags.from,
+      subject: flags.subject,
+      html_body: flags.html,
+      text_body: flags.text,
+      template: flags.template,
+      template_model: templateModel,
+    }),
+  );
+  ctx.print(data, () => {
+    ctx.io.out(`Queued ${data.queued}, skipped ${data.skipped}`);
+    if (data.skipped > 0) {
+      // The endpoint caps a single request at 1000 recipients.
+      ctx.io.out('Recipients past the per-request cap of 1000 were skipped; use a campaign.');
+    }
   });
 }
 
@@ -163,7 +210,26 @@ export function registerEmails(program: Command, deps: CliDeps): void {
     .option('--model <json>', 'JSON object with template variables')
     .option('--tag <tag>', 'tag for filtering and stats')
     .option('--stream <permalink>', 'message stream to send through')
+    .option(
+      '--idempotency-key <key>',
+      'make the send replayable: the same key with the same body returns the first result',
+    )
     .action(action(deps, (ctx, flags: SendFlags) => sendEmail(ctx, flags)));
+
+  emails
+    .command('send-to-stream <stream>')
+    .description("Send the same content to every subscriber of a broadcast stream")
+    .requiredOption('--from <address>', 'sender address (verified domain)')
+    .option('--subject <subject>', 'message subject')
+    .option('--html <html>', 'HTML body')
+    .option('--text <text>', 'plain-text body')
+    .option('--template <permalink>', 'send a stored template instead of a body')
+    .option('--model <json>', 'JSON object with template variables')
+    .action(
+      action(deps, (ctx, stream: string, flags: BroadcastFlags) =>
+        sendToStream(ctx, stream, flags),
+      ),
+    );
 
   emails
     .command('list')

@@ -2,12 +2,17 @@ import { Command } from 'commander';
 
 import { createClient } from './client.js';
 import { registerBounces } from './commands/bounces.js';
+import { registerCampaigns } from './commands/campaigns.js';
 import { registerDmarc } from './commands/dmarc.js';
 import { registerEmails } from './commands/emails.js';
+import { registerInbound } from './commands/inbound.js';
+import { registerLayouts } from './commands/layouts.js';
 import { registerLogin } from './commands/login.js';
+import { registerLogs } from './commands/logs.js';
 import { registerPing } from './commands/ping.js';
 import { registerStats } from './commands/stats.js';
 import { registerStreams } from './commands/streams.js';
+import { registerSubscribers } from './commands/subscribers.js';
 import { registerTemplates } from './commands/templates.js';
 import type { CliDeps } from './context.js';
 import { defaultIo } from './io.js';
@@ -43,6 +48,11 @@ export function buildProgram(deps: Partial<CliDeps> = {}): Command {
   registerStats(program, resolved);
   registerBounces(program, resolved);
   registerDmarc(program, resolved);
+  registerCampaigns(program, resolved);
+  registerSubscribers(program, resolved);
+  registerLayouts(program, resolved);
+  registerInbound(program, resolved);
+  registerLogs(program, resolved);
   registerPing(program, resolved);
   registerLogin(program, resolved);
 

@@ -49,6 +49,25 @@ camelmailer emails send --from billing@acme.com --to ada@example.com \
 
 `--to`, `--cc`, `--bcc` and `--reply-to` accept multiple addresses.
 
+`--idempotency-key` makes a send replayable: the same key with the same body
+returns the first result instead of sending twice, and a different body under
+the same key is refused with `InvalidIdempotentRequest`.
+
+```bash
+camelmailer emails send --from billing@acme.com --to ada@example.com \
+  --text "Your receipt" --idempotency-key "order-4711"
+```
+
+### Broadcast to a stream
+
+```bash
+camelmailer emails send-to-stream newsletter \
+  --from news@acme.com --subject September --text "What shipped this month."
+```
+
+Recipients past the per-request cap of 1000 come back as skipped, so a larger
+audience wants a campaign.
+
 ### Inspect messages
 
 ```bash
@@ -65,10 +84,73 @@ camelmailer templates get welcome
 camelmailer templates render welcome --model '{"name":"Ada"}'   # preview, no send
 ```
 
-### Everything else
+### Campaigns
+
+A campaign is content plus an audience. The two ways to create one behave
+differently, so pick deliberately: `create` writes it and waits, `send-now`
+expands it to the stream's subscribers before the command returns.
+
+```bash
+# Write it and leave it alone. Without --scheduled-at it stays a draft.
+camelmailer campaigns create --stream newsletter --from news@acme.com \
+  --name September --subject "What shipped" --text "Hello."
+
+# Goes out on the spot, no draft and no schedule.
+camelmailer campaigns send-now newsletter --name "Status update" \
+  --from news@acme.com --text "All clear."
+
+camelmailer campaigns list
+camelmailer campaigns list --stream newsletter
+camelmailer campaigns get 7                      # with statistics
+camelmailer campaigns update 7 --scheduled-at 2026-10-01T08:00:00Z
+camelmailer campaigns update 7 --clear-schedule  # back to a draft
+camelmailer campaigns send 7                     # now, whatever the schedule said
+camelmailer campaigns cancel 7
+```
+
+### Subscribers
+
+A broadcast send to an address that is not subscribed is refused, so this
+list is the audience.
+
+```bash
+camelmailer subscribers list newsletter
+camelmailer subscribers add newsletter ada@example.com
+camelmailer subscribers import newsletter ada@example.com grace@example.com
+camelmailer subscribers complaint newsletter ada@example.com   # suppress + unsubscribe
+camelmailer subscribers remove newsletter ada@example.com
+```
+
+### Streams and layouts
 
 ```bash
 camelmailer streams list
+camelmailer streams create --name Broadcasts --permalink broadcasts --stream-type broadcast
+camelmailer streams get broadcasts
+camelmailer streams update broadcasts --name Newsletter
+camelmailer streams archive broadcasts
+
+camelmailer layouts list
+camelmailer layouts create --name Default --permalink default \
+  --html '<html><body>{{{ content }}}</body></html>'
+camelmailer layouts upload-logo default ./logo.png    # prints the URL to reference
+camelmailer layouts delete default
+```
+
+### Inbound, held mail and logs
+
+```bash
+camelmailer inbound list --status held
+camelmailer inbound retry 55     # back on the delivery queue
+camelmailer inbound bypass 55    # release past the hold
+
+camelmailer logs list --status 4xx
+camelmailer logs tags
+```
+
+### Everything else
+
+```bash
 camelmailer stats --from 2026-07-01 --to 2026-07-11
 camelmailer bounces list
 camelmailer dmarc summary --domain acme.com

@@ -36,6 +36,7 @@ describe('emails send', () => {
         subject: 'Hi',
         text_body: 'Hello!',
       }),
+      undefined,
     );
     expect(result.exitCode).toBe(0);
     expect(result.stdout).toContain('Queued 1 message');
@@ -74,6 +75,33 @@ describe('emails send', () => {
         tag: 'welcome',
         stream: 'broadcasts',
       }),
+      undefined,
+    );
+  });
+
+  it('passes --idempotency-key as request options, not as a body field', async () => {
+    const send = vi.fn(() => ok(sendResponse));
+    await runCli(
+      [
+        'emails',
+        'send',
+        '--from',
+        'billing@acme.com',
+        '--to',
+        'ada@example.com',
+        '--text',
+        'Hello!',
+        '--idempotency-key',
+        'order-4711',
+      ],
+      { emails: { send } as never },
+    );
+
+    // The key belongs outside the body: the body is what the server hashes
+    // to recognise the same request.
+    expect(send).toHaveBeenCalledWith(
+      expect.not.objectContaining({ idempotencyKey: 'order-4711' }),
+      { idempotencyKey: 'order-4711' },
     );
   });
 
@@ -97,6 +125,7 @@ describe('emails send', () => {
 
     expect(sendWithTemplate).toHaveBeenCalledWith(
       expect.objectContaining({ template: 'welcome', template_model: { name: 'Ada' } }),
+      undefined,
     );
     expect(result.exitCode).toBe(0);
   });
